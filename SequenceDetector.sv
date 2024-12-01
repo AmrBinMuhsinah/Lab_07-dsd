@@ -10,7 +10,6 @@ module SequenceDetector(
         output logic [3:0]counter 
 
         );
-       
         
         parameter IDLE = 3'b000,
              S1 = 3'b001,
@@ -24,9 +23,11 @@ module SequenceDetector(
              if (!reset)begin
          current_state <= IDLE;
          counter<=0;
-        end   else
+        end   else  begin
         current_state <= next_state;
-        counter<= counter+1;
+        if(current_state == S4)
+              counter <= counter+1;
+         end
          end
         
         always_comb begin
@@ -36,8 +37,6 @@ module SequenceDetector(
         S1: next_state = in_bit ? S2 : IDLE;
         S2: next_state = in_bit ? S2 : S3;
         S3: next_state = in_bit ? S4 : IDLE;
-       
-       
         S4: next_state = IDLE;
         
             default: next_state = IDLE;
@@ -46,6 +45,7 @@ module SequenceDetector(
         
              always_comb begin
               detected = (current_state == S4);
+  
            end
            
            
